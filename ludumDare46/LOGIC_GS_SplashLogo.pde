@@ -1,5 +1,5 @@
 public class GS_SplashLogo extends GameState {
-  private final int TIME_TO_END = 3;
+  private final int TIME_TO_END = 300;
   private boolean started;
   private int t0;
   private PImage img; 
@@ -14,8 +14,9 @@ public class GS_SplashLogo extends GameState {
       started = true;
       t0 = millis();
     }
-    if ( (millis() - t0)/1000 > TIME_TO_END ) {
-      state_context.endGame();
+    if ( (millis() - t0) > TIME_TO_END ) {
+      state_context.setState(new GS_Menu());
+      //state_context.endGame();
     }
   }
   
