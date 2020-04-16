@@ -35,7 +35,7 @@ public class Engine {
     gstates.peek().iterateDraw();
   }
 
-  public void exit() {
+  public void endGame() {
     exit();
   }
 }

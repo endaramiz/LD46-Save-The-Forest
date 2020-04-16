@@ -1,10 +1,12 @@
 public class GS_SplashLogo extends GameState {
-  private final int TIME_TO_END = 10;
+  private final int TIME_TO_END = 3;
   private boolean started;
   private int t0;
+  private PImage img; 
   
   public GS_SplashLogo() {
     started = false;
+    img = loadImage("images/splash_amstudio.png");
   }
   
   public void iterateLogic(Engine state_context) {
@@ -13,12 +15,12 @@ public class GS_SplashLogo extends GameState {
       t0 = millis();
     }
     if ( (millis() - t0)/1000 > TIME_TO_END ) {
-      state_context.exit();
+      state_context.endGame();
     }
   }
   
   public void iterateDraw() {
-    fill((millis() - t0)/1000/TIME_TO_END*255);
-    ellipse(mouseX, mouseY, 80, 80);
+    background(255);
+    image(img, width/2 - img.width/2, height/2 - img.height/2);
   }
 }
