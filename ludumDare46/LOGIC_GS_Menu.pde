@@ -28,7 +28,7 @@ public class GS_Menu extends GameState {
         if (tb.isOver(mouseX, mouseY)) {
           switch (ms) {
           case Play:
-            state_context.endGame();
+            state_context.setState(new GS_Play());
             break;
           case Exit:
             state_context.endGame();
