@@ -2,24 +2,44 @@ final int TERRAIN_W = 200;
 final int TERRAIN_H = 150;
 final int TERRAIN_TILE_WH = 4;
 
-/*
-public class Fire {
- private Boolean isOnFire;
- private float fuel;
- 
- public Fire() {
- isOnFire = false;
- }
- 
- public void startFire(float fuel) {
- this.fuel = fuel;
- }
- 
- public void update() {
- 
- }
- }
- */
+
+public class FireMan {
+  private static final int MaxLife = 60*5;
+  public int row, col;
+  public int life;
+  
+  public FireMan(int row, int col) {
+    this.row = row;
+    this.col = col;
+    life = MaxLife;
+  }
+  
+  public void update() {
+    life -= 1;
+  }
+  
+  public void display() {
+    colorMode(RGB, 255, 255, 255);
+    noStroke();
+    fill(0, 0, 255);
+    rect(col*TERRAIN_TILE_WH, row*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
+  }
+  
+  public Boolean isDead() {
+   return life <= 0; 
+  }
+  
+  public void protect(Boolean[][] m) {
+    int d = 4;
+    for (int i = row-d; i <= row+d; ++i) {
+      for (int j = col-d; j <= col+d; ++j) {
+        if (i > 0 && i < m.length && j > 0 && j < m[i].length) {
+          m[i][j] = true;
+        }
+      }
+    }
+  }
+}
 
 public class Terrain {
   static final float noiseScale1 = 0.02;
@@ -33,10 +53,14 @@ public class Terrain {
   private Boolean[][] isOnFire;
   //private float hardness;
 
+  private Vector<FireMan> firemans;
+  private Boolean[][] protectedZone;
 
   public Terrain(int seed, float hardness) {
     //this.hardness = hardness;
-
+    firemans = new Vector();
+    protectedZone = new Boolean[TERRAIN_H][TERRAIN_W];
+    
     noiseSeed(seed);
     noiseDetail(noiseOctaves, noiseFallOff);
     backgr = createGraphics(width, height);
@@ -85,6 +109,38 @@ public class Terrain {
     }
   }
 
+  public void update() {
+    for (int i = 0; i < firemans.size(); ++i) {
+      firemans.get(i).update();
+    }
+    
+    // Delete FireMans
+    Vector<FireMan> firemansToDelete = new Vector<FireMan>();
+    for (int i = 0; i < firemans.size(); ++i) {
+      FireMan fireman = firemans.get(i);
+      if (fireman.isDead()) {
+        firemansToDelete.add(fireman);
+      }
+    }
+    for (int i = 0; i < firemansToDelete.size(); ++i) {
+      firemans.remove(firemansToDelete.get(i));
+    }
+    
+    
+    // Update Protected Zone
+    for (int i = 0; i < protectedZone.length; ++i) {
+      for (int j = 0; j < protectedZone[i].length; ++j) {
+        protectedZone[i][j] = false;
+      }
+    }
+    for (int i = 0; i < firemans.size(); ++i) {
+      firemans.get(i).protect(protectedZone);
+    }
+    
+    
+    propagateFire();
+  }
+  
   public void display() {
     colorMode(HSB, 360, 100, 100);
     noStroke();
@@ -105,13 +161,17 @@ public class Terrain {
         }
       }
     }
+    
+    for (int i = 0; i < firemans.size(); ++i) {
+      firemans.get(i).display();
+    }
   }
 
   public void startFire(int row, int col) {
     isOnFire[row][col] = true;
   }
 
-  public void propagateFire() {
+  private void propagateFire() {
     for (int r = 0; r < TERRAIN_H; ++r) {
       for (int c = 0; c < TERRAIN_W; ++c) {
         if (isOnFire[r][c]) {
@@ -122,7 +182,7 @@ public class Terrain {
     
     for (int r = 0; r < TERRAIN_H; ++r) {
       for (int c = 0; c < TERRAIN_W; ++c) {
-        if (data[r][c] > 0.0001) {
+        if (data[r][c] > 0.0001 && !protectedZone[r][c]) {
           float fireAround = 0;
 
           int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
@@ -143,6 +203,10 @@ public class Terrain {
         }
       }
     }
+  }
+  
+  public void addFireMan(int row, int col) {
+    firemans.add(new FireMan(row, col));
   }
   
   private float[][] normalizeMatrix(float[][] values) {
