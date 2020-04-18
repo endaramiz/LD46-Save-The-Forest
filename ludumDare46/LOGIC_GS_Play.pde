@@ -8,6 +8,10 @@ public class GS_Play extends GameState {
   }
   
   public void iterateLogic(Engine state_context) {
+    if (mousePressed) {
+      terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+    }
+    terrain.propagateFire();
     /*
     if (mousePressed) {
       state_context.endGame();
