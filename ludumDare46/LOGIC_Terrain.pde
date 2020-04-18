@@ -9,11 +9,11 @@ public class Terrain {
   
   private float[][] data;
   private Boolean[][] isMountain;
-  private float hardness;
+  //private float hardness;
   
   
   public Terrain(int seed, float hardness) {
-    this.hardness = hardness;
+    //this.hardness = hardness;
     
     noiseSeed(seed);
     noiseDetail(noiseOctaves, noiseFallOff);
@@ -22,15 +22,17 @@ public class Terrain {
     for (int row = 0; row < TERRAIN_H; row++) {
       for (int col = 0; col < TERRAIN_W; col++) {
         float value = map(noise(col*noiseScale, row*noiseScale), 0.0f, perlinNoiseMax(noiseOctaves, noiseFallOff), 0.0f, 1.0f);
-        println(value);
+        //println(value);
         isMountain[row][col] = value > hardness;
         if (isMountain[row][col]) {
           data[row][col] = map(value, hardness, 1.0f, 0.0f, 1.0f);
         }
         else {
-          data[row][col] = map(min(0.5f, value), 0.0f, 0.5f, 0.0f, 1.0f);
+          //data[row][col] = map(min(0.5f, value), 0.0f, 0.5f, 0.0f, 1.0f);
+          data[row][col] = map(value, 0.0f, hardness, 0.0f, 1.0f);
         }
         //data[row][col] = noise(col*noiseScale, row*noiseScale);
+        println(data[row][col]);
       }
       println();
     }
@@ -41,12 +43,14 @@ public class Terrain {
       for (int col = 0; col < TERRAIN_W; ++col) {
         int x = col*TERRAIN_TILE_WH;
         int y = row*TERRAIN_TILE_WH;
+        colorMode(HSB, 360, 100, 100);
         if (isMountain[row][col]) {
-          fill((1-data[row][col])*255, 0, 0);
+          fill(43, map(1-data[row][col], 0.0f, 1.0f, 16.0f, 100.0f ), 30);
         }
         else {
           //fill(255,255,255);
-          fill(0, (1-data[row][col])*255, 0);
+          //fill(0, (1-data[row][col])*255, 0);
+          fill(79, 100, map(1-data[row][col], 0.0f, 1.0f, 20, 80)); //60 - 90
         }
         noStroke();
         rect(x, y, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
