@@ -84,28 +84,26 @@ public class GS_Play extends GameState {
   }
 
   public void iterateLogic(Engine state_context) {
+    if (mousePressed && mouseButton == RIGHT) {
+      terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+    }
+
     if (mousePressed && !mouseRead) {
       mouseRead = true;
       if (mouseY < 600-80) {
-        if (mouseButton == RIGHT) {
-          terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
-        }
-        else if (mouseButton == LEFT) {
+        if (mouseButton == LEFT) {
           if (addFireman) {
             terrain.addFireMan(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
             addFireman = false;
-          }
-          else if (addRanger) {
+          } else if (addRanger) {
             terrain.addRanger(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
             addRanger = false;
           }
         }
-      }
-      else {
+      } else {
         if (firemanButton.isOver(mouseX, mouseY)) {
           addFireman = true;
-        }
-        else if (rangerButton.isOver(mouseX, mouseY)) {
+        } else if (rangerButton.isOver(mouseX, mouseY)) {
           addRanger = true;
         }
       }

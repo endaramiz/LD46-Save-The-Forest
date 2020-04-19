@@ -95,6 +95,7 @@ public class Terrain {
   //private Boolean[][] isMountain;
   private Boolean[][] isOnFire;
   //private float hardness;
+  private float levelWater;
 
   private Vector<FireMan> firemans;
   private Boolean[][] protectedZone;
@@ -102,6 +103,7 @@ public class Terrain {
 
   public Terrain(int seed, float hardness) {
     //this.hardness = hardness;
+    levelWater = 1.0f-hardness;
     firemans = new Vector();
     protectedZone = new Boolean[TERRAIN_H][TERRAIN_W];
     rangers = new Vector();
@@ -132,12 +134,18 @@ public class Terrain {
         int x = col*TERRAIN_TILE_WH;
         int y = row*TERRAIN_TILE_WH;
         backgr.colorMode(HSB, 360, 100, 100);
-        backgr.fill(43, map(1-value, 0.0f, 1.0f, 16.0f, 100.0f ), 30);
+        if (value > levelWater) { // forest
+          //backgr.fill(43, map(value, levelWater, 1.0f, 100.0f, 16.0f), 30);
+          backgr.fill(32, 100, map(value, levelWater, 1.0f, 80, 30));
+        }
+        else { // water
+          backgr.fill(210, 100, map(value, 0.0f, levelWater, 40.0f, 75.0f));
+        }
         backgr.rect(x, y, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
         
         //println(value);
-        final float dy = (1-hardness);
-        float new_v = max(0, (1-value)-dy);
+        final float dy = levelWater;
+        float new_v = max(0, value-dy);
         new_v = map(new_v, 0.0f, 1-dy, 0.0f, 1.0f);
         data[row][col] = new_v;
         //println(data[row][col]);
