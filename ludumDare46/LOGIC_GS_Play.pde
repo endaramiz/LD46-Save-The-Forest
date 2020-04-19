@@ -121,8 +121,8 @@ public class GS_Play extends GameState {
   public void iterateDraw() {
     terrain.display();
     displayGUI();
-    firemanButton.display(firemanButton.isOver(mouseX, mouseY));
-    rangerButton.display(rangerButton.isOver(mouseX, mouseY));
+    firemanButton.display(firemanButton.isOver(mouseX, mouseY) || addFireman);
+    rangerButton.display(rangerButton.isOver(mouseX, mouseY) || addRanger);
   }
 
   private void displayGUI() {
