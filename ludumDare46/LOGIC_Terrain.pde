@@ -1,5 +1,5 @@
 final int TERRAIN_W = 200;
-final int TERRAIN_H = 150;
+final int TERRAIN_H = 130;
 final int TERRAIN_TILE_WH = 4;
 
 
