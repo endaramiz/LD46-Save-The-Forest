@@ -41,6 +41,46 @@ public class FireMan {
   }
 }
 
+public class Ranger {
+  private static final int MaxLife = 60*3;
+  public int row, col;
+  public int life;
+  
+  public Ranger(int row, int col) {
+    this.row = row;
+    this.col = col;
+    life = MaxLife;
+  }
+  
+  public void update() {
+    life -= 1;
+  }
+  
+  public void display() {
+    colorMode(RGB, 255, 255, 255);
+    noStroke();
+    fill(255, 255, 0);
+    rect(col*TERRAIN_TILE_WH, row*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
+  }
+  
+  public Boolean isDead() {
+   return life <= 0; 
+  }
+  
+  public void cleanForest(float[][] m) {
+    //println("CleanForest:");
+    int d = 4;
+    for (int i = row-d; i <= row+d; ++i) {
+      for (int j = col-d; j <= col+d; ++j) {
+        if (i > 0 && i < m.length && j > 0 && j < m[i].length) {
+          //if (i == row-d && j == col-d) println("Life "+life+": "+m[i][j]+"-"+0.1f/(float)MaxLife);
+          m[i][j] = max(0.0f, m[i][j]-(0.6f/(float)MaxLife));
+        }
+      }
+    }
+  }
+}
+
 public class Terrain {
   static final float noiseScale1 = 0.02;
   static final float noiseScale2 = 0.1;
@@ -55,11 +95,13 @@ public class Terrain {
 
   private Vector<FireMan> firemans;
   private Boolean[][] protectedZone;
+  private Vector<Ranger> rangers;
 
   public Terrain(int seed, float hardness) {
     //this.hardness = hardness;
     firemans = new Vector();
     protectedZone = new Boolean[TERRAIN_H][TERRAIN_W];
+    rangers = new Vector();
     
     noiseSeed(seed);
     noiseDetail(noiseOctaves, noiseFallOff);
@@ -90,12 +132,12 @@ public class Terrain {
         backgr.fill(43, map(1-value, 0.0f, 1.0f, 16.0f, 100.0f ), 30);
         backgr.rect(x, y, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
         
-        println(value);
+        //println(value);
         final float dy = (1-hardness);
         float new_v = max(0, (1-value)-dy);
         new_v = map(new_v, 0.0f, 1-dy, 0.0f, 1.0f);
         data[row][col] = new_v;
-        println(data[row][col]);
+        //println(data[row][col]);
       }
       println();
     }
@@ -110,10 +152,10 @@ public class Terrain {
   }
 
   public void update() {
+    // Update FireMans
     for (int i = 0; i < firemans.size(); ++i) {
       firemans.get(i).update();
     }
-    
     // Delete FireMans
     Vector<FireMan> firemansToDelete = new Vector<FireMan>();
     for (int i = 0; i < firemans.size(); ++i) {
@@ -125,8 +167,6 @@ public class Terrain {
     for (int i = 0; i < firemansToDelete.size(); ++i) {
       firemans.remove(firemansToDelete.get(i));
     }
-    
-    
     // Update Protected Zone
     for (int i = 0; i < protectedZone.length; ++i) {
       for (int j = 0; j < protectedZone[i].length; ++j) {
@@ -137,6 +177,27 @@ public class Terrain {
       firemans.get(i).protect(protectedZone);
     }
     
+    // Update Rangers
+    for (int i = 0; i < rangers.size(); ++i) {
+      rangers.get(i).update();
+    }
+    
+    // Delete Rangers
+    Vector<Ranger> forestrangersToDelete = new Vector<Ranger>();
+    for (int i = 0; i < rangers.size(); ++i) {
+      Ranger forestranger = rangers.get(i);
+      if (forestranger.isDead()) {
+        forestrangersToDelete.add(forestranger);
+      }
+    }
+    for (int i = 0; i < forestrangersToDelete.size(); ++i) {
+      rangers.remove(forestrangersToDelete.get(i));
+    }
+    
+    // clean forest
+    for (int i = 0; i < rangers.size(); ++i) {
+      rangers.get(i).cleanForest(data);
+    }
     
     propagateFire();
   }
@@ -164,6 +225,10 @@ public class Terrain {
     
     for (int i = 0; i < firemans.size(); ++i) {
       firemans.get(i).display();
+    }
+    
+    for (int i = 0; i < rangers.size(); ++i) {
+      rangers.get(i).display();
     }
   }
 
@@ -207,6 +272,10 @@ public class Terrain {
   
   public void addFireMan(int row, int col) {
     firemans.add(new FireMan(row, col));
+  }
+  
+  public void addRanger(int row, int col) {
+    rangers.add(new Ranger(row, col));
   }
   
   private float[][] normalizeMatrix(float[][] values) {
