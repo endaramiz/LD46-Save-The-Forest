@@ -316,6 +316,10 @@ public class Terrain {
     rangers.add(new Ranger(row, col));
   }
   
+  public int getWorkers() {
+    return firemans.size() + rangers.size();
+  }
+  
   private float[][] normalizeMatrix(float[][] values) {
     float minV=999999;
     float maxV=-99999;

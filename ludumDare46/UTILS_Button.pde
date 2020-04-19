@@ -16,7 +16,7 @@ public abstract class Button {
     return true;
   }
   
-  public abstract void display(boolean selected);
+  //public abstract void display(boolean selected);
 }
 
 public class TextButton extends Button {
