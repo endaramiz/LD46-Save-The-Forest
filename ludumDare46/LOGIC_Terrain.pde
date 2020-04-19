@@ -5,6 +5,7 @@ final int TERRAIN_TILE_WH = 4;
 
 public class FireMan {
   private static final int MaxLife = 60*5;
+  private static final int d = 4;
   public int row, col;
   public int life;
   
@@ -18,10 +19,21 @@ public class FireMan {
     life -= 1;
   }
   
-  public void display() {
-    colorMode(RGB, 255, 255, 255);
+  public void display(float[][] m) {
+    colorMode(RGB, 255, 255, 255, 1.0f);
     noStroke();
-    fill(0, 0, 255);
+    
+    for (int i = row-d; i <= row+d; ++i) {
+      for (int j = col-d; j <= col+d; ++j) {
+        if (dist(i, j, row, col) <= d &&
+        i > 0 && i < m.length && j > 0 && j < m[i].length) {
+          fill(0, 0, 255, 0.16f);
+          rect(j*TERRAIN_TILE_WH, i*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
+        }
+      }
+    }
+    
+    fill(0, 0, map(life, 0, MaxLife, 0, 255));
     rect(col*TERRAIN_TILE_WH, row*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
   }
   
@@ -30,7 +42,6 @@ public class FireMan {
   }
   
   public void protect(Boolean[][] m) {
-    int d = 4;
     for (int i = row-d; i <= row+d; ++i) {
       for (int j = col-d; j <= col+d; ++j) {
         if (dist(i, j, row, col) <= d &&
@@ -44,6 +55,7 @@ public class FireMan {
 
 public class Ranger {
   private static final int MaxLife = 60*3;
+  private static final int d = 4;
   public int row, col;
   public int life;
   
@@ -57,9 +69,22 @@ public class Ranger {
     life -= 1;
   }
   
-  public void display() {
-    colorMode(RGB, 255, 255, 255);
+  public void display(float[][] m) {
+    colorMode(RGB, 255, 255, 255, 1.0f);
+    /*
+    for (int i = row-d; i <= row+d; ++i) {
+      for (int j = col-d; j <= col+d; ++j) {
+        if (dist(i, j, row, col) <= d &&
+        i > 0 && i < m.length && j > 0 && j < m[i].length) {
+          fill(255, 255, 0, 0.2f);
+          rect(j*TERRAIN_TILE_WH, i*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
+        }
+      }
+    }
+    */
+    
     noStroke();
+    //fill(map(life, 0, MaxLife, 192, 255), map(life, 0, MaxLife, 192, 255), 0);
     fill(255, 255, 0);
     rect(col*TERRAIN_TILE_WH, row*TERRAIN_TILE_WH, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
   }
@@ -70,7 +95,6 @@ public class Ranger {
   
   public void cleanForest(float[][] m) {
     //println("CleanForest:");
-    int d = 4;
     for (int i = row-d; i <= row+d; ++i) {
       for (int j = col-d; j <= col+d; ++j) {
         //if (abs(i-row) + abs(j-col) <=  d &&
@@ -238,11 +262,11 @@ public class Terrain {
     }
     
     for (int i = 0; i < firemans.size(); ++i) {
-      firemans.get(i).display();
+      firemans.get(i).display(data);
     }
     
     for (int i = 0; i < rangers.size(); ++i) {
-      rangers.get(i).display();
+      rangers.get(i).display(data);
     }
   }
 
