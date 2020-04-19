@@ -16,7 +16,7 @@ public class GS_Play extends GameState {
         terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
       }
       if (mouseButton == RIGHT) {
-        terrain.addRanger(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+        terrain.addFireMan(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
       }
     }
     

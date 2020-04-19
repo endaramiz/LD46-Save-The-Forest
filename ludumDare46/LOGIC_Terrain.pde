@@ -33,7 +33,8 @@ public class FireMan {
     int d = 4;
     for (int i = row-d; i <= row+d; ++i) {
       for (int j = col-d; j <= col+d; ++j) {
-        if (i > 0 && i < m.length && j > 0 && j < m[i].length) {
+        if (dist(i, j, row, col) <= d &&
+        i > 0 && i < m.length && j > 0 && j < m[i].length) {
           m[i][j] = true;
         }
       }
@@ -72,7 +73,9 @@ public class Ranger {
     int d = 4;
     for (int i = row-d; i <= row+d; ++i) {
       for (int j = col-d; j <= col+d; ++j) {
-        if (i > 0 && i < m.length && j > 0 && j < m[i].length) {
+        //if (abs(i-row) + abs(j-col) <=  d &&
+        if (dist(i, j, row, col) <= d &&
+        i > 0 && i < m.length && j > 0 && j < m[i].length) {
           //if (i == row-d && j == col-d) println("Life "+life+": "+m[i][j]+"-"+0.1f/(float)MaxLife);
           m[i][j] = max(0.0f, m[i][j]-(0.6f/(float)MaxLife));
         }
