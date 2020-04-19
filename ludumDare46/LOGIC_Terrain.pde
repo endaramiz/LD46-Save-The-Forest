@@ -139,7 +139,7 @@ public class Terrain {
           backgr.fill(32, 100, map(value, levelWater, 1.0f, 80, 30));
         }
         else { // water
-          backgr.fill(210, 100, map(value, 0.0f, levelWater, 40.0f, 75.0f));
+          backgr.fill(210, 100, map(value, 0.0f, levelWater, 40.0f, 95.0f));
         }
         backgr.rect(x, y, TERRAIN_TILE_WH, TERRAIN_TILE_WH);
         
@@ -148,6 +148,9 @@ public class Terrain {
         float new_v = max(0, value-dy);
         new_v = map(new_v, 0.0f, 1-dy, 0.0f, 1.0f);
         data[row][col] = new_v;
+        if (random(0, 0.2) > data[row][col]) {
+          data[row][col] = 0;
+        }
         //println(data[row][col]);
       }
       println();
