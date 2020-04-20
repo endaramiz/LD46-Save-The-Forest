@@ -117,7 +117,7 @@ public class GS_Play extends GameState {
   public void loadLevel(int ID) {
     levelID = ID;
     Level lvl = levels.get(levelID);
-    terrain = new Terrain(lvl.seed, lvl.hardness);
+    terrain = new Terrain(lvl.seed, 200, 130, 4, lvl.hardness);
     initialForestValue = (int) terrain.getForestValue();
     targetForestValue = int (initialForestValue*lvl.target);
     freeWorkers = lvl.maxWorkers;
@@ -134,7 +134,7 @@ public class GS_Play extends GameState {
     // DEBUG
     if (mousePressed && mouseButton == RIGHT) {
       //terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
-      terrain.addRanger(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+      terrain.addRanger(mouseY/terrain.getTileWH(), mouseX/terrain.getTileWH());
     }
 
     if (mousePressed && !mouseRead) {
@@ -142,10 +142,10 @@ public class GS_Play extends GameState {
       if (mouseY < 600-80) {
         if (mouseButton == LEFT) {
           if (addFireman) {
-            terrain.addFireMan(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+            terrain.addFireMan(mouseY/terrain.getTileWH(), mouseX/terrain.getTileWH());
             addFireman = false;
           } else if (addRanger) {
-            terrain.addRanger(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+            terrain.addRanger(mouseY/terrain.getTileWH(), mouseX/terrain.getTileWH());
             addRanger = false;
           }
         }
@@ -240,8 +240,8 @@ public class GS_Play extends GameState {
   private Vector<Level> readLevels() {
     Vector levels = new Vector();
     //Level(int seed, int fireX, int fireY, float hardness, int maxWorkers, float target)
-    levels.add(new Level(0, 500/TERRAIN_TILE_WH, 400/TERRAIN_TILE_WH, 0.7, 5, 0.5));
-    levels.add(new Level(1, 200/TERRAIN_TILE_WH, 500/TERRAIN_TILE_WH, 0.7, 5, 0.5));
+    levels.add(new Level(0, 500/4, 400/4, 0.7, 5, 0.5));
+    levels.add(new Level(1, 200/4, 500/4, 0.7, 5, 0.5));
     return levels;
   }
 }

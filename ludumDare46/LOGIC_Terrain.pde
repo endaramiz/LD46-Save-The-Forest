@@ -1,7 +1,3 @@
-final int TERRAIN_W = 200;
-final int TERRAIN_H = 130;
-final int TERRAIN_TILE_WH = 4;
-
 
 public class FireMan {
   private static final int MaxLife = 60*5;
@@ -19,7 +15,7 @@ public class FireMan {
     life -= 1;
   }
 
-  public void display(float[][] m) {
+  public void display(float[][] m, int TERRAIN_TILE_WH) {
     colorMode(RGB, 255, 255, 255, 1.0f);
     noStroke();
 
@@ -80,7 +76,7 @@ public class Ranger {
     life -= 1;
   }
 
-  public void display(float[][] m) {
+  public void display(float[][] m, int TERRAIN_TILE_WH) {
     colorMode(RGB, 255, 255, 255, 1.0f);
     /*
     for (int i = row-d; i <= row+d; ++i) {
@@ -131,6 +127,10 @@ public class Ranger {
 }
 
 public class Terrain {
+  int TERRAIN_W;// = 200;
+  int TERRAIN_H;// = 130;
+  int TERRAIN_TILE_WH;// = 4;
+  
   static final float noiseScale1 = 0.02;
   static final float noiseScale2 = 0.1;
   static final int noiseOctaves = 8;
@@ -147,7 +147,11 @@ public class Terrain {
   private boolean[][] protectedZone;
   private Vector<Ranger> rangers;
 
-  public Terrain(int seed, float hardness) {
+  public Terrain(int seed, int terrainW, int terrainH, int tileWH, float hardness) {
+    TERRAIN_W = terrainW;
+    TERRAIN_H = terrainH;
+    TERRAIN_TILE_WH = tileWH;
+    
     //this.hardness = hardness;
     levelWater = 1.0f-hardness;
     firemans = new Vector();
@@ -284,11 +288,11 @@ public class Terrain {
     }
 
     for (int i = 0; i < firemans.size(); ++i) {
-      firemans.get(i).display(data);
+      firemans.get(i).display(data, TERRAIN_TILE_WH);
     }
 
     for (int i = 0; i < rangers.size(); ++i) {
-      rangers.get(i).display(data);
+      rangers.get(i).display(data, TERRAIN_TILE_WH);
     }
   }
 
@@ -385,5 +389,15 @@ public class Terrain {
       }
     }
     return newValues;
+  }
+  
+  public int getW() {
+    return TERRAIN_W;
+  }
+  public int getH() {
+    return TERRAIN_H;
+  }
+  public int getTileWH() {
+    return TERRAIN_TILE_WH;
   }
 }

@@ -15,7 +15,7 @@ public class GS_SplashLogo extends GameState {
       t0 = millis();
     }
     if ( (millis() - t0) > TIME_TO_END ) {
-      state_context.setState(new GS_Menu());
+      state_context.setState(new GS_Title());
       //state_context.endGame();
     }
   }
