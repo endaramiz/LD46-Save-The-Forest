@@ -85,7 +85,7 @@ public class GS_Play extends GameState {
   
   public GS_Play() {
     terrain = new Terrain(0, 0.7f);
-    maxWorkers = 1;
+    maxWorkers = 5;
     
     mouseRead = true;
 

@@ -278,7 +278,11 @@ public class Terrain {
     for (int r = 0; r < TERRAIN_H; ++r) {
       for (int c = 0; c < TERRAIN_W; ++c) {
         if (isOnFire[r][c]) {
-          data[r][c] = max(0, data[r][c] - 0.02);
+          data[r][c] -= 1/60.0/8.0;
+          if (data[r][c] < 0) {
+            data[r][c] = 0;
+            isOnFire[r][c] = false;
+          }
         }
       }
     }
@@ -295,12 +299,12 @@ public class Terrain {
             int cs = c+dc[i];
             if (rs >= 0 && rs < TERRAIN_H && cs >= 0 && cs < TERRAIN_W) {
               if (isOnFire[rs][cs]) {
-                fireAround += data[rs][cs];
+                fireAround += 0.7 + data[rs][cs]*0.3;
               }
             }
           }
 
-          if (random(16) < fireAround) {
+          if (random(200) < fireAround) {
             isOnFire[r][c] = true;
           }
         }
