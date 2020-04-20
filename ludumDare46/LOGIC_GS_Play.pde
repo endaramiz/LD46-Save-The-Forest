@@ -80,11 +80,14 @@ public class GS_Play extends GameState {
   private boolean addRanger;
   
   private int freeWorkers, maxWorkers;
+  
+  private int initialForestValue;
 
   private PFont font;
   
   public GS_Play() {
     terrain = new Terrain(0, 0.7f);
+    initialForestValue = (int) terrain.getForestValue();
     maxWorkers = 5;
     
     mouseRead = true;
@@ -167,8 +170,8 @@ public class GS_Play extends GameState {
     vertex(508, 78);
     vertex(508, 2);
     endShape();
-
-
+    
+    // Workers
     colorMode(RGB, 255, 255, 255);
     fill(255, 255, 255);
     textAlign(CENTER, CENTER);
@@ -176,6 +179,16 @@ public class GS_Play extends GameState {
     text("Workers", 40, 18);
     textFont(font, 32);
     text(freeWorkers, 40, 40);
+    
+    // Forest Info
+    textFont(font, 14);
+    textAlign(LEFT, CENTER);
+    text("Initial Forest:", 510+20, 20);
+    text("Mission Forest:", 510+20, 40);
+    text("Actual Forest:", 510+20, 60);
+    textAlign(RIGHT, CENTER);
+    text(initialForestValue, 800-20, 20);
+    text((int) terrain.getForestValue(), 800-20, 60);
     
     popMatrix();
   }

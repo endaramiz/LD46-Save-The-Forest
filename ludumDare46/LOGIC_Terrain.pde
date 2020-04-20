@@ -132,6 +132,7 @@ public class Terrain {
     protectedZone = new Boolean[TERRAIN_H][TERRAIN_W];
     rangers = new Vector();
     
+    randomSeed(seed);
     noiseSeed(seed);
     noiseDetail(noiseOctaves, noiseFallOff);
     backgr = createGraphics(width, height);
@@ -322,6 +323,16 @@ public class Terrain {
   
   public int getWorkers() {
     return firemans.size() + rangers.size();
+  }
+  
+  public float getForestValue() {
+    float v = 0;
+    for (int r = 0; r < TERRAIN_H; ++r) {
+      for (int c = 0; c < TERRAIN_W; ++c) {
+        v += data[r][c];
+      }
+    }
+    return v;
   }
   
   private float[][] normalizeMatrix(float[][] values) {
