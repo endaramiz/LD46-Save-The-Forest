@@ -274,6 +274,17 @@ public class Terrain {
   public void startFire(int row, int col) {
     isOnFire[row][col] = true;
   }
+  
+  public boolean existFire() {
+    for (int r = 0; r < TERRAIN_H; ++r) {
+      for (int c = 0; c < TERRAIN_W; ++c) {
+        if (isOnFire[r][c]) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   private void propagateFire() {
     for (int r = 0; r < TERRAIN_H; ++r) {

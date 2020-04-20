@@ -69,8 +69,27 @@ public class RangerButton extends Button {
   }
 }
 
+public class Level {
+  public int seed;
+  public int fireX, fireY;
+  public float hardness;
+  public int maxWorkers;
+  public float target;
+  public Level(int seed, int fireX, int fireY, float hardness, int workers, float target) {
+    this.seed = seed;
+    this.fireX = fireX;
+    this.fireY = fireY;
+    this.hardness = hardness;
+    this.maxWorkers = workers;
+    this.target = target;
+  }
+}
+
 public class GS_Play extends GameState {
+  private Vector<Level> levels;
+  private int levelID;
   private Terrain terrain;
+  
   private Boolean mouseRead;
 
   private FiremanButton firemanButton;
@@ -79,30 +98,39 @@ public class GS_Play extends GameState {
   private boolean addFireman;
   private boolean addRanger;
   
-  private int freeWorkers, maxWorkers;
-  
-  private int initialForestValue;
+  private int freeWorkers;
+  private int initialForestValue, targetForestValue;
 
   private PFont font;
   
   public GS_Play() {
-    terrain = new Terrain(0, 0.7f);
-    initialForestValue = (int) terrain.getForestValue();
-    maxWorkers = 5;
+    levels = readLevels();
+    levelID = 0;
+    loadLevel();
     
     mouseRead = true;
 
     firemanButton = new FiremanButton(80, 600-80, 80, 80);
     rangerButton = new RangerButton(80+(80)*1, 600-80, 80, 80);
-
-    addFireman = false;
-    addRanger = false;
     
     font = createFont("font/SourceCodePro-Regular.ttf", 32);
   }
+  
+  private void loadLevel() {
+    Level lvl = levels.get(levelID);
+    terrain = new Terrain(lvl.seed, lvl.hardness);
+    initialForestValue = (int) terrain.getForestValue();
+    targetForestValue = int (initialForestValue*lvl.target);
+    freeWorkers = lvl.maxWorkers;
+    
+    addFireman = false;
+    addRanger = false;
+    
+    terrain.startFire(lvl.fireX, lvl.fireY);
+  }
 
   public void iterateLogic(Engine state_context) {
-    freeWorkers = maxWorkers - terrain.getWorkers();
+    freeWorkers = levels.get(levelID).maxWorkers - terrain.getWorkers();
     
     // DEBUG
     if (mousePressed && mouseButton == RIGHT) {
@@ -135,6 +163,11 @@ public class GS_Play extends GameState {
     }
 
     terrain.update();
+    
+    if (!terrain.existFire()) {
+      levelID = (levelID+1)%levels.size();
+      loadLevel();
+    }
   }
 
   public void iterateDraw() {
@@ -188,8 +221,17 @@ public class GS_Play extends GameState {
     text("Actual Forest:", 510+20, 60);
     textAlign(RIGHT, CENTER);
     text(initialForestValue, 800-20, 20);
+    text(targetForestValue, 800-20, 40);
     text((int) terrain.getForestValue(), 800-20, 60);
     
     popMatrix();
+  }
+  
+  private Vector<Level> readLevels() {
+    Vector levels = new Vector();
+    //Level(int seed, int fireX, int fireY, float hardness, int maxWorkers, float target)
+    levels.add(new Level(0, 500/TERRAIN_TILE_WH, 400/TERRAIN_TILE_WH, 0.7, 5, 0.5));
+    levels.add(new Level(1, 200/TERRAIN_TILE_WH, 500/TERRAIN_TILE_WH, 0.7, 5, 0.5));
+    return levels;
   }
 }
