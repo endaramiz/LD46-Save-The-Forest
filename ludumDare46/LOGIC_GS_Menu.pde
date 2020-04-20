@@ -28,7 +28,9 @@ public class GS_Menu extends GameState {
         if (tb.isOver(mouseX, mouseY)) {
           switch (ms) {
           case Play:
-            state_context.setState(new GS_Play());
+            GS_Play level = new GS_Play();
+            level.loadLevel(0);
+            state_context.setState(level);
             break;
           case Exit:
             state_context.endGame();
@@ -40,6 +42,8 @@ public class GS_Menu extends GameState {
   }
 
   public void iterateDraw() {
+    colorMode(RGB, 255, 255, 255);
+    fill(255, 255, 255);
     for (TextButton tb : buttons.values()) {
       tb.display(tb.isOver(mouseX, mouseY));
     }

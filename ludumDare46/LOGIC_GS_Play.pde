@@ -105,8 +105,6 @@ public class GS_Play extends GameState {
   
   public GS_Play() {
     levels = readLevels();
-    levelID = 0;
-    loadLevel();
     
     mouseRead = true;
 
@@ -116,7 +114,8 @@ public class GS_Play extends GameState {
     font = createFont("font/SourceCodePro-Regular.ttf", 32);
   }
   
-  private void loadLevel() {
+  public void loadLevel(int ID) {
+    levelID = ID;
     Level lvl = levels.get(levelID);
     terrain = new Terrain(lvl.seed, lvl.hardness);
     initialForestValue = (int) terrain.getForestValue();
@@ -134,7 +133,8 @@ public class GS_Play extends GameState {
     
     // DEBUG
     if (mousePressed && mouseButton == RIGHT) {
-      terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+      //terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
+      terrain.addRanger(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
     }
 
     if (mousePressed && !mouseRead) {
@@ -164,9 +164,19 @@ public class GS_Play extends GameState {
 
     terrain.update();
     
+    // MISSION COMPLETE/FAIL
     if (!terrain.existFire()) {
-      levelID = (levelID+1)%levels.size();
-      loadLevel();
+      //levelID = (levelID+1)%levels.size();
+      GS_MComplete stateMComplete = new GS_MComplete();
+      LvlFinishData lvlData = new LvlFinishData();
+      lvlData.terrain = terrain;
+      lvlData.ID = levelID;
+      lvlData.scoreIni = initialForestValue;
+      lvlData.scoreMision = targetForestValue;
+      lvlData.scoreFin = (int) terrain.getForestValue();
+      lvlData.levelsCount = levels.size();
+      stateMComplete.setLevelData(lvlData);
+      state_context.setState(stateMComplete);
     }
   }
 
