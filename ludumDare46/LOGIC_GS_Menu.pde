@@ -1,7 +1,7 @@
 import java.util.*;
 
 private static enum MenuSelections {
-  Play, Exit, a, b
+  Play, Exit
 };
 
 public class GS_Menu extends GameState {
