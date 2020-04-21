@@ -1,7 +1,7 @@
 
 public class FireMan {
   private static final int MaxLife = 60*5;
-  private static final int d = 4;
+  private static final int d = 8;
   public int row, col;
   public int life;
 
@@ -61,8 +61,9 @@ public class FireMan {
 }
 
 public class Ranger {
-  private static final int MaxLife = 60*3;
-  private static final int d = 4;
+  private static final int MaxLife = 60*15;
+  private static final float CleanFactor = 0.7f;
+  private static final int d = 5;
   public int row, col;
   public int life;
 
@@ -119,7 +120,7 @@ public class Ranger {
         if (dist(i, j, row, col) <= d &&
           i > 0 && i < m.length && j > 0 && j < m[i].length) {
           //if (i == row-d && j == col-d) println("Life "+life+": "+m[i][j]+"-"+0.1f/(float)MaxLife);
-          m[i][j] = max(0.0f, m[i][j]-(0.6f/(float)MaxLife));
+          m[i][j] = max(0.05f, m[i][j]-(CleanFactor/(float)MaxLife));
         }
       }
     }
