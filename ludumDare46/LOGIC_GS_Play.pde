@@ -251,9 +251,21 @@ public class GS_Play extends GameState {
 
   private Vector<Level> readLevels() {
     Vector levels = new Vector();
-    //Level(int seed, int fireX, int fireY, float hardness, int maxWorkers, float target)
+    //Level(int seed, int fireR, int fireC, float hardness, int maxWorkers, float target)
+    levels.add(new Level(7, 400/4, 600/4, 0.6, 5, 0.5));
+    //levels.add(new Level(2, 200/4, 500/4, 0.5, 5, 0.5));
     levels.add(new Level(0, 500/4, 400/4, 0.7, 5, 0.5));
-    levels.add(new Level(1, 200/4, 500/4, 0.7, 5, 0.5));
+    //levels.add(new Level(1, 200/4, 500/4, 0.7, 5, 0.5));
+    randomSeed(millis());
+    for (int n = 0; n < 50; ++n) {
+      int seed = (int) random(99999);
+      int fireR = (int) random(500/4);
+      int fireC = (int) random(800/4);
+      float hardness = random(0.5, 1.0);
+      int maxWorkers = (int) random(3, 7);
+      float target = random(0.4, 0.6);
+      levels.add(new Level(seed, fireR, fireC, hardness, maxWorkers, target));
+    }
     return levels;
   }
 
