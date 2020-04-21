@@ -23,19 +23,19 @@ public class GS_Menu extends GameState {
     }
   }
 
-  public void iterateLogic(Engine state_context) {
+  public void iterateLogic(Engine stateContext) {
     if (mousePressed) {
       for (MenuSelections ms : MenuSelections.values()) {
         TextButton tb = buttons.get(ms);
         if (tb.isOver(mouseX, mouseY)) {
           switch (ms) {
           case Play:
-            GS_Play level = new GS_Play();
+            GS_Play level = new GS_Play(stateContext.soundManager);
             level.loadLevel(0);
-            state_context.setState(level);
+            stateContext.setState(level);
             break;
           case Exit:
-            state_context.endGame();
+            stateContext.endGame();
             break;
           }
         }

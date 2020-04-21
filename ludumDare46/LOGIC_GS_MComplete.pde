@@ -20,7 +20,7 @@ public class GS_MComplete extends GameState {
   public void iterateLogic(Engine stateContext) {
     if (mousePressed && !mouseRead) {
       if (isWin()) {
-        GS_Play nextLevel = new GS_Play();
+        GS_Play nextLevel = new GS_Play(stateContext.soundManager);
         nextLevel.loadLevel((levelData.ID+1)%levelData.levelsCount);
         stateContext.setState(nextLevel);
       } else {

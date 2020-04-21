@@ -7,8 +7,10 @@ public abstract class GameState {
 
 public class Engine {
   private Stack<GameState> gstates;
+  public SoundManager soundManager;
 
   public Engine() {
+    soundManager = new SoundManager();
     setState(new GS_SplashLogo());
   }
 

@@ -103,7 +103,7 @@ public class GS_Play extends GameState {
 
   private PFont font;
   
-  public GS_Play() {
+  public GS_Play(SoundManager soundManager) {
     levels = readLevels();
     
     mouseRead = true;
@@ -112,6 +112,7 @@ public class GS_Play extends GameState {
     rangerButton = new RangerButton(80+(80)*1, 600-80, 80, 80);
     
     font = createFont("font/SourceCodePro-Regular.ttf", 32);
+    soundManager.playMusic();
   }
   
   public void loadLevel(int ID) {
@@ -164,8 +165,12 @@ public class GS_Play extends GameState {
 
     terrain.update();
     
+    state_context.soundManager.updateMusic();
+    
     // MISSION COMPLETE/FAIL
     if (!terrain.existFire()) {
+      state_context.soundManager.stopSong();
+      
       //levelID = (levelID+1)%levels.size();
       GS_MComplete stateMComplete = new GS_MComplete();
       LvlFinishData lvlData = new LvlFinishData();
