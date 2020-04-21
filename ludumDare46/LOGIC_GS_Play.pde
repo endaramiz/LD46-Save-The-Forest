@@ -132,11 +132,13 @@ public class GS_Play extends GameState {
   public void iterateLogic(Engine state_context) {
     freeWorkers = levels.get(levelID).maxWorkers - terrain.getWorkers();
 
+/*
     // DEBUG
     if (mousePressed && mouseButton == RIGHT) {
       //terrain.startFire(mouseY/TERRAIN_TILE_WH, mouseX/TERRAIN_TILE_WH);
       terrain.addRanger(mouseY/terrain.getTileWH(), mouseX/terrain.getTileWH());
     }
+*/
 
     if (mousePressed && !mouseRead) {
       mouseRead = true;
